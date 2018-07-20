@@ -32,7 +32,7 @@ workflow:
          Uuid: "5b4c50210207459803bfb3e0"
 ```
 
-###### run workflow
+##### run workflow
 ```shell
 cd cmds/gwctl/
 go build .
