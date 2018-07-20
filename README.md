@@ -36,5 +36,5 @@ workflow:
 ```shell
 cd cmds/gwctl/
 go build .
-./gwctl run workflow-demo.yam
+./gwctl run workflow-demo.yaml
 ```
