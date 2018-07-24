@@ -1,19 +1,19 @@
-# choose test case run mode
+# choose run mode
 # serial: executed one by one
 # parallel: run test case concurrently
 # mode is case insensitive
 mode: serial
-# retry onece when fail
+# retry once when fail
 retry: 1 
-# test case steps
+# workflow
 workflow:
-  # test case step
+  # steps
   - step:
       # step type
       type: nap
       # step label
       label: "auth api"
-      # additional customized data that used to run test case step
+      # additional customized data that would be used to run this step
       # the first character of the field name must be uppercase
       data: 
         # test case selector 
