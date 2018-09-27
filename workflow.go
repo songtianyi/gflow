@@ -25,9 +25,7 @@ func New(mode string, retry int) *Workflow {
 		Mode:  strings.ToLower(mode),
 		queue: make([]Step, 0),
 	}
-	if retry > 0 {
-		w.OnFailure = RetryFailure(retry)
-	}
+	w.OnFailure = RetryFailure(retry)
 	return w
 }
 
