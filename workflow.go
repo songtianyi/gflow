@@ -43,12 +43,12 @@ func (w *Workflow) Run() error {
 			if err := step.Run(w.Context); err != nil {
 				if err := step.OnFailure(err, w.Context); err != nil {
 					if err := w.OnFailure(err, step, w.Context); err != nil {
-						fmt.Println(fmt.Sprintf("%s-FAILED-%d-%s", prefix, time.Now().Unix(), err))
+						fmt.Println(fmt.Sprintf("%s-%d-FAILED-%s", prefix, time.Now().Unix(), err))
 						return err
 					}
 				}
 			}
-			fmt.Println(fmt.Sprintf("%s-SUCCESS-%d-%s", prefix, time.Now().Unix(), "OK"))
+			fmt.Println(fmt.Sprintf("%s-%d-COMPLETE-%s", prefix, time.Now().Unix(), "OK"))
 		}
 	}
 	return nil
