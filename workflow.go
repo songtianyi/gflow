@@ -3,6 +3,7 @@ package gflow
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 const (
@@ -13,17 +14,21 @@ const (
 type Context interface{}
 
 type Workflow struct {
-	Mode      string
-	OnFailure FailureFunc
-	Context   Context
+	Mode        string
+	OnFailure   FailureFunc
+	Context     Context
+	Description string
+	FileNmae    string
 
 	queue []Step
 }
 
-func New(mode string, retry int) *Workflow {
+func New(mode string, retry int, desc string, filename string) *Workflow {
 	w := &Workflow{
-		Mode:  strings.ToLower(mode),
-		queue: make([]Step, 0),
+		Mode:        strings.ToLower(mode),
+		queue:       make([]Step, 0),
+		Description: desc,
+		FileNmae:    filename,
 	}
 	w.OnFailure = RetryFailure(retry)
 	return w
@@ -32,16 +37,18 @@ func New(mode string, retry int) *Workflow {
 func (w *Workflow) Run() error {
 	if w.Mode == SERIAL {
 		for i, step := range w.queue {
-			prefix := fmt.Sprintf("STEP(%d)(%s):", i, step.Label())
+			// output format
+			// yaml-index-uuid-label-start-end-status-error
+			prefix := fmt.Sprintf("%s-%d-%s-%s-%d", w.FileNmae, i, step.UUID(), step.Label(), time.Now().Unix())
 			if err := step.Run(w.Context); err != nil {
 				if err := step.OnFailure(err, w.Context); err != nil {
 					if err := w.OnFailure(err, step, w.Context); err != nil {
-						fmt.Println(prefix, "[FAILED]", err)
+						fmt.Println(fmt.Sprintf("%s-FAILED-%d-%s", prefix, time.Now().Unix(), err))
 						return err
 					}
 				}
 			}
-			fmt.Println(prefix, "COMPLETE")
+			fmt.Println(fmt.Sprintf("%s-SUCCESS-%d-%s", prefix, time.Now().Unix(), "OK"))
 		}
 	}
 	return nil

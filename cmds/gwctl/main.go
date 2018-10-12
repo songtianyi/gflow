@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/songtianyi/gflow"
@@ -13,9 +13,10 @@ import (
 )
 
 type flow struct {
-	Mode     string `yaml:"mode"`
-	Retry    int    `yaml:"retry"`
-	Workflow []struct {
+	Mode        string `yaml:"mode"`
+	Retry       int    `yaml:"retry"`
+	Description string `yaml:"description"`
+	Workflow    []struct {
 		Step struct {
 			Type  string      `yaml:"type"`
 			Label string      `yaml:"label"`
@@ -49,12 +50,11 @@ func commandRunHandler(c *cli.Context) error {
 		return fmt.Errorf("umarshal %s failed, %s", path, err)
 	}
 
-	fmt.Println(string(b), "\n", f)
 	// validate workflow
 	if err := validate(f); err != nil {
 		return err
 	}
-	wf := gflow.New(f.Mode, f.Retry)
+	wf := gflow.New(f.Mode, f.Retry, f.Description, filepath.Base(path))
 	for _, s := range f.Workflow {
 		switch strings.ToLower(s.Step.Type) {
 		case "nap":
@@ -106,7 +106,8 @@ func main() {
 	}
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 	return
 }

@@ -35,6 +35,13 @@ func (s *NapStep) Label() string {
 	return s.label
 }
 
+func (s *NapStep) UUID() string {
+	if s.data != nil {
+		return s.data.Uuid
+	}
+	return "UUID"
+}
+
 func (s *NapStep) init() error {
 	return nil
 }
@@ -44,7 +51,6 @@ func (s *NapStep) Run(context Context) error {
 	if err := s.init(); err != nil {
 		return err
 	}
-	fmt.Println(s.data)
 	if len(s.data.Uuid) > 1 {
 		req, err := http.NewRequest("GET", s.uri+"/"+s.data.Uuid, nil)
 		if err != nil {

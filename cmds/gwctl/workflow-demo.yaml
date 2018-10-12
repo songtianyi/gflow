@@ -6,6 +6,7 @@ mode: serial
 # retry once when fail
 retry: 1 
 # workflow
+description: "demo file"
 workflow:
   # steps
   - step:
