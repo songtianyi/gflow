@@ -39,11 +39,11 @@ func (w *Workflow) Run() error {
 		for i, step := range w.queue {
 			// output format
 			// yaml-index-uuid-label-start-end-status-error
-			prefix := fmt.Sprintf("%s-%d-%s-%s-%d", w.FileNmae, i, step.UUID(), step.Label(), time.Now().Unix())
+			prefix := fmt.Sprintf("%s-%d-%s-%s-%d", w.FileNmae, i, step.UUID(), step.Label(), time.Now().UnixNano()/1e6)
 			if err := step.Run(w.Context); err != nil {
 				if err := step.OnFailure(err, w.Context); err != nil {
 					if err := w.OnFailure(err, step, w.Context); err != nil {
-						fmt.Println(fmt.Sprintf("%s-%d-FAILED-%s", prefix, time.Now().Unix(), err))
+						fmt.Println(fmt.Sprintf("%s-%d-FAILED-%s", prefix, time.Now().UnixNano()/1e6, err))
 						return err
 					}
 				}
