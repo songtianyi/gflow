@@ -48,7 +48,7 @@ func (w *Workflow) Run() error {
 					}
 				}
 			}
-			fmt.Println(fmt.Sprintf("%s-%d-COMPLETE-%s", prefix, time.Now().Unix(), "OK"))
+			fmt.Println(fmt.Sprintf("%s-%d-COMPLETE-%s", prefix, time.Now().UnixNano()/1e6, "OK"))
 		}
 	}
 	return nil
